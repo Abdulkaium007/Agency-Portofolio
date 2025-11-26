@@ -10,7 +10,7 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="text-4xl font-bold text-primary dark:text-primary" data-theme-text>
-          BornoByte Agency
+          BornoByte Web Agency
         </Link>
 
         {/* Desktop Menu */}
