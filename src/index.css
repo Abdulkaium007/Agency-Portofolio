@@ -1,0 +1,152 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Outfit:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base fonts */
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: #ffffff; /* Light mode background */
+  color: #1f2937; /* gray-800 */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Prompt', sans-serif;
+}
+
+/* Dark mode */
+[data-theme="dark"] body {
+  background-color: #1f2937; /* gray-800 */
+  color: #f9fafb; /* gray-50 */
+}
+
+/* Dark mode specific overrides */
+[data-theme="dark"] .bg-white {
+  background-color: #111827;
+}
+
+[data-theme="dark"] .text-gray-800 {
+  color: #f9fafb;
+}
+
+/* DaisyUI fallback for colors in dark mode */
+[data-theme="dark"] .text-primary {
+  color: #ffa600 !important; /* Amber for dark mode */
+}
+
+[data-theme="dark"] .bg-primary {
+  background-color: #ffa600 !important;
+}
+
+[data-theme="dark"] .hover\:bg-primary:hover {
+  background-color: #ffbf004c !important;
+}
+
+[data-theme="dark"] .hover\:text-primary:hover {
+  color: #ffa600 !important;
+}
+
+[data-theme="dark"] .border-primary {
+  border-color: #ffa600 !important;
+}
+
+[data-theme="dark"] .progress-primary {
+  color: #ffa600 !important;
+}
+
+/* Fallbacks for blue in light mode if needed */
+[data-theme="light"] .text-primary {
+  color: #1e40af !important; /* Premium dark blue */
+}
+
+[data-theme="light"] .bg-primary {
+  background-color: #1e40af !important; /* Premium dark blue */
+}
+
+[data-theme="light"] .hover\:bg-primary:hover {
+  background-color: #1e3a8a !important; /* Slightly darker blue */
+}
+
+[data-theme="light"] .hover\:text-primary:hover {
+  color: #1e40af !important;
+}
+
+[data-theme="light"] .border-primary {
+  border-color: #1e40af !important;
+}
+
+/* Secondary color fallback */
+[data-theme] .text-secondary {
+  color: #14b8a6 !important;
+}
+
+[data-theme] .bg-secondary {
+  background-color: #14b8a6 !important;
+}
+
+
+/* Fallback for button text color switching */
+[data-theme="dark"] .text-button {
+  color: #000000 !important; /* Black color */
+}
+
+/* Fallback for button text color switching */
+[data-theme="light"] .text-button {
+  color: #ffffff !important; /* White color */
+}
+
+/* Fallback for sec text color switching */
+[data-theme="light"] .text-sec {
+  color: #424242 !important; /* Black color */
+}
+
+/* Fallback for button text color switching */
+[data-theme="dark"] .text-sec {
+  color: #9E9E9E !important; /* White color */
+}
+
+
+/* Default container spacing */
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+section {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Responsive spacing */
+@media (min-width: 640px) {
+  .container { padding-left: 2rem; padding-right: 2rem; }
+  section { padding-top: 3rem; padding-bottom: 3rem; }
+}
+
+@media (min-width: 768px) {
+  .container { padding-left: 3rem; padding-right: 3rem; }
+  section { padding-top: 4rem; padding-bottom: 4rem; }
+}
+
+@media (min-width: 1024px) {
+  .container { padding-left: 4rem; padding-right: 4rem; }
+  section { padding-top: 5rem; padding-bottom: 5rem; }
+}
+
+@media (min-width: 1280px) {
+  .container { padding-left: 6rem; padding-right: 6rem; }
+  section { padding-top: 6rem; padding-bottom: 6rem; }
+}
+
+/* Hide scrollbars */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
