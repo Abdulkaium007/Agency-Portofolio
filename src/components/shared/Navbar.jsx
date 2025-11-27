@@ -17,32 +17,44 @@ const Navbar = () => {
       BornoByte Web Agency
     </Link>
 
-    {/* Desktop Menu */}
-    <div className="hidden md:flex space-x-6 items-center">
-      <Link
-        to="/"
-        className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary transition-colors duration-300 text-lg"
-      >
-        Home
-      </Link>
-      <Link
-        to="/projects"
-        className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary transition-colors duration-300 text-lg"
-      >
-        Projects
-      </Link>
-      <Link
-        to="/services"
-        className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary transition-colors duration-300 text-lg"
-      >
-        Services
-      </Link>
-      <Link
-        to="/contact"
-        className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary transition-colors duration-300 text-lg"
-      >
-        Contact
-      </Link>
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-6 items-center">
+          <Link
+            to="/"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
+          >
+            Home
+          </Link>
+          <Link
+            to="/projects"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
+          >
+            Projects
+          </Link>
+          <Link
+            to="/services"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
+          >
+            Services
+          </Link>
+          <Link
+            to="/about"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
+          >
+            About Us
+          </Link>
+          <Link
+            to="/blog"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
+          >
+            Blog
+          </Link>
+          <Link
+            to="/contact"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
+          >
+            Contact
+          </Link>
 
       <ThemeSwitcher />
     </div>
