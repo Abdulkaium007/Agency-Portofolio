@@ -37,7 +37,7 @@ const Navbar = () => {
             to="/about"
             className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
           >
-            About Us
+            AboutUs
           </Link>
           <Link
             to="/blog"
