@@ -34,6 +34,18 @@ const Navbar = () => {
             Services
           </Link>
           <Link
+            to="/about"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
+          >
+            About Us
+          </Link>
+          <Link
+            to="/blog"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
+          >
+            Blog
+          </Link>
+          <Link
             to="/contact"
             className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
           >
