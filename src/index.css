@@ -59,23 +59,23 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Fallbacks for blue in light mode if needed */
 [data-theme="light"] .text-primary {
-  color: #1e40af !important; /* Premium dark blue */
+  color: #002DD1 !important; /* Premium dark blue */
 }
 
 [data-theme="light"] .bg-primary {
-  background-color: #1e40af !important; /* Premium dark blue */
+  background-color: #002DD1 !important; /* Premium dark blue */
 }
 
 [data-theme="light"] .hover\:bg-primary:hover {
-  background-color: #1e3a8a !important; /* Slightly darker blue */
+  background-color: #002DD1 !important; /* Slightly darker blue */
 }
 
 [data-theme="light"] .hover\:text-primary:hover {
-  color: #1e40af !important;
+  color: #002DD1 !important;
 }
 
 [data-theme="light"] .border-primary {
-  border-color: #1e40af !important;
+  border-color: #002DD1 !important;
 }
 
 /* Secondary color fallback */

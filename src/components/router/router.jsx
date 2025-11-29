@@ -5,8 +5,10 @@ import Layout from "../Layout/Layout.jsx";
 
 // Pages
 import Home from "../home/Home.jsx";
+import About from "../AboutUs/About.jsx";
 
 // Optional 404 page
+// eslint-disable-next-line react-refresh/only-export-components
 const NotFound = () => (
   <div className="min-h-screen flex items-center justify-center bg-base-200">
     <div className="text-center">
@@ -28,6 +30,12 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       // Add more routes here if needed
+      // NEW PAGES
+      { path: "/about", element: <About /> },
+      // { path: "/projects", element: <ProjectsPage /> },
+      // { path: "/services", element: <ServicesPage /> },
+      // { path: "/contact", element: <ContactPage /> },
+
     ],
   },
 ]);
