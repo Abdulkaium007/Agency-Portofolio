@@ -42,7 +42,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 [data-theme="dark"] .hover\:bg-primary:hover {
-  background-color: #ffbf004c !important;
+  background-color: #ffa600 !important;
 }
 
 [data-theme="dark"] .hover\:text-primary:hover {
@@ -107,6 +107,37 @@ h1, h2, h3, h4, h5, h6 {
 [data-theme="dark"] .text-sec {
   color: #9E9E9E !important; /* White color */
 }
+
+/* Hover border for both modes */
+[data-theme="dark"] .hover\:border-primary:hover {
+  border-color: #ffa600 !important;
+}
+[data-theme="light"] .hover\:border-primary:hover {
+  border-color: #002DD1 !important;
+}
+
+/* Gradient animated text for headings for both modes */
+[data-theme="dark"] .gradient-text {
+  background: linear-gradient(90deg, #ffbf00, #ffa600, #ff6600);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-animation 3s ease-in-out infinite;
+} 
+[data-theme="light"] .gradient-text {
+  background: linear-gradient(90deg, #0059ff, #0037ff, #5900ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-animation 3s ease-in-out infinite;
+}
+@keyframes gradient-animation {
+  0%, 100% {
+    background-position: 0% 30%;
+  }
+  50% {
+    background-position: 100% 90%;
+  }
+} 
+
 
 
 /* Default container spacing */
