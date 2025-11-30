@@ -94,6 +94,20 @@ const Navbar = () => {
       >
         Services
       </Link>
+            <Link
+        to="/about"
+        onClick={() => setMenuOpen(false)}
+        className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary transition-colors duration-300"
+      >
+        About Us
+      </Link>
+            <Link
+        to="/blog"
+        onClick={() => setMenuOpen(false)}
+        className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary transition-colors duration-300"
+      >
+        Blog
+      </Link>
       <Link
         to="/contact"
         onClick={() => setMenuOpen(false)}
