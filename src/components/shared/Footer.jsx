@@ -30,6 +30,18 @@ const Footer = () => {
             Services
           </Link>
           <Link
+            to="/about"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary text-sm transition-colors duration-300"
+          >
+            About Us
+          </Link>
+          <Link
+            to="/blog"
+            className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary text-sm transition-colors duration-300"
+          >
+            Blog
+          </Link>
+          <Link
             to="/contact"
             className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary text-sm transition-colors duration-300"
           >

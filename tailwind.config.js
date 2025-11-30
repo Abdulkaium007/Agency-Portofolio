@@ -23,6 +23,23 @@ export default {
         secondary: '#14b8a6',
         accent: '#f59e0b',
       },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-350%)' },
+        },
+        marqueeReverse: {
+        '0%': { transform: 'translateX(-350%)' },
+        '100%': { transform: 'translateX(0%)' },
+      },
+      },
+      
+      animation: {
+        marquee: 'marquee 60s linear infinite',
+        marqueeFast: 'marquee 50s linear infinite',
+        marqueeReverse: 'marqueeReverse 40s linear infinite',
+        marqueeReverseFast: 'marqueeReverse 15s linear infinite',
+      },
     },
   },
   plugins: [
