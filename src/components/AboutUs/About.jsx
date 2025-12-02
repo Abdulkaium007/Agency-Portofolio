@@ -5,7 +5,7 @@ import TechStack from "../AboutUs/TechStack";
 
 const AboutPage = () => {
   return (
-    <div className="min-h-screen bg-base-100 dark:bg-base-200">
+    <div className="min-h-screen bg-base-200 dark:bg-base-200">
       <HeroSection />
       <MissionSection />
       <TeamSection />
