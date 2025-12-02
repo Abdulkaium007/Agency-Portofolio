@@ -5,7 +5,7 @@ import CTASection from "./CTASection";
 
 const Home = () => {
   return (
-    <div>
+    <div className="bg-base-200">
       <HeroSection />
       <ServicesSection />
       <CTASection />
