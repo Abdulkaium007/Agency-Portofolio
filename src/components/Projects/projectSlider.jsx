@@ -1,5 +1,5 @@
 // src/components/projects/ProjectSlider.jsx
-import ProjectCard from "./ProjectCard";
+import ProjectCard from "../Projects/ProjectCard";
 
 export default function ProjectSlider({ projects, onSelect }) {
   return (
