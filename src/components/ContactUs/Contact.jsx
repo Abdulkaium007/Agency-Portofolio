@@ -19,7 +19,7 @@ export default function ContactSection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.9, ease: "easeOut" }}
-        className="gradient-text text-5xl md:text-6xl font-black text-center mb-20 tracking-tight"
+        className="gradient-text text-5xl md:text-6xl font-black text-center mb-20 tracking-tight [line-height:1.2] pb-2"
         >
         Let’s Build Something Epic
         </motion.h2>
