@@ -19,7 +19,7 @@ export default function Projects() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-20"
           >
-            <h1 className="text-5xl md:text-7xl font-black mb-6 gradient-text">
+            <h1 className="text-5xl md:text-7xl font-black mb-6 gradient-text [line-height:1.2] pb-2">
               Our Projects
             </h1>
             <p className="text-xl text-base-content/70 max-w-3xl mx-auto">

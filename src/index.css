@@ -98,6 +98,14 @@ h1, h2, h3, h4, h5, h6 {
   color: #ffffff !important; /* White color */
 }
 
+/* Fallbacks for hover button text color black/white switching */
+[data-theme="dark"] .hover\:text-button:hover {
+  color: #000000 !important; /* Black color */
+}
+[data-theme="light"] .hover\:text-button:hover {
+  color: #ffffff !important; /* White color */
+}
+
 /* Fallback for sec text color switching */
 [data-theme="light"] .text-sec {
   color: #424242 !important; /* Black color */
@@ -124,7 +132,7 @@ h1, h2, h3, h4, h5, h6 {
   animation: gradient-animation 3s ease-in-out infinite;
 } 
 [data-theme="light"] .gradient-text {
-  background: linear-gradient(90deg, #0059ff, #0037ff, #5900ff);
+  background: linear-gradient(90deg, #4c00ff, #002fff, #007bff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient-animation 3s ease-in-out infinite;
