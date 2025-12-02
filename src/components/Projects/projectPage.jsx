@@ -1,5 +1,6 @@
 // src/pages/Projects.jsx
 import { useState } from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { projects } from "../../data/projects";
 import ProjectSlider from "../Projects/projectSlider";

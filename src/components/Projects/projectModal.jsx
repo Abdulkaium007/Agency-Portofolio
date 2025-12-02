@@ -1,4 +1,5 @@
 // src/components/projects/ProjectModal.jsx
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { FiExternalLink, FiGithub, FiX } from "react-icons/fi";
 

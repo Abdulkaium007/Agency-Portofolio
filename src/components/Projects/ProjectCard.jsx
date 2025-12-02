@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // src/components/projects/ProjectCard.jsx
 import { motion } from "framer-motion";
 
