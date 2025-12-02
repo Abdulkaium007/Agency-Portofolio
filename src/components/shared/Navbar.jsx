@@ -19,12 +19,12 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6 items-center">
-          <Link
+          {/* <Link
             to="/"
             className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
           >
             Home
-          </Link>
+          </Link> */}
           <Link
             to="/projects"
             className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary font-medium transition-colors duration-300 text-lg"
@@ -73,13 +73,13 @@ const Navbar = () => {
   {/* Mobile Menu */}
   {menuOpen && (
     <div className="md:hidden bg-base-100 dark:bg-base-200 shadow-lg px-6 py-4 flex flex-col gap-4 animate-fadeIn">
-      <Link
+      {/* <Link
         to="/"
         onClick={() => setMenuOpen(false)}
         className="text-base-content dark:text-base-content hover:text-primary dark:hover:text-primary transition-colors duration-300"
       >
         Home
-      </Link>
+      </Link> */}
       <Link
         to="/projects"
         onClick={() => setMenuOpen(false)}
