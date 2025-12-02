@@ -7,6 +7,7 @@ import Layout from "../Layout/Layout.jsx";
 import Home from "../home/Home.jsx";
 import About from "../AboutUs/About.jsx";
 import ContactPage from "../ContactUs/Contact.jsx";
+import ProjectsPage from "../Projects/projectPage.jsx";
 
 // Optional 404 page
 // eslint-disable-next-line react-refresh/only-export-components
@@ -33,7 +34,7 @@ export const router = createBrowserRouter([
       // Add more routes here if needed
       // NEW PAGES
       { path: "/about", element: <About /> },
-      // { path: "/projects", element: <ProjectsPage /> },
+      { path: "/projects", element: <ProjectsPage /> },
       // { path: "/services", element: <ServicesPage /> },
       { path: "/contact", element: <ContactPage /> },
 
