@@ -124,19 +124,99 @@ h1, h2, h3, h4, h5, h6 {
   border-color: #002DD1 !important;
 }
 
+/*Fallback for secondary text color*/
+[data-theme="dark"] .text-secondary {
+  color: #2dff42 !important; /* Teal-300 */
+}
+[data-theme="light"] .text-secondary {
+  color: #00bc77 !important; /* Teal-500 */
+}
+
 /* Gradient animated text for headings for both modes */
 [data-theme="dark"] .gradient-text {
-  background: linear-gradient(90deg, #ffbf00, #ffa600, #ff6600);
+  background: linear-gradient(90deg, #ffbf00, #ff9500, #ff4000);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient-animation 3s ease-in-out infinite;
+  animation: gradient-animation 5s ease-in-out infinite;
 } 
 [data-theme="light"] .gradient-text {
-  background: linear-gradient(90deg, #4c00ff, #002fff, #007bff);
+  background: linear-gradient(90deg, #4c00ff, #002fff, #0095ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient-animation 3s ease-in-out infinite;
+  animation: gradient-animation 5s ease-in-out infinite;
 }
+
+/* Gradient hero text for headings for both modes */
+[data-theme="dark"] .hero-gradient-text {
+  background: linear-gradient(90deg, #ffb300, #ff3300, #ff005d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-animation 5s ease-in-out infinite;
+  background-clip: text;
+} 
+[data-theme="light"] .hero-gradient-text {
+  background: linear-gradient(90deg, #4c00ff, #007bff, #007bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-animation 5s ease-in-out infinite;
+  background-clip: text;
+}
+
+/*Gradient hero button background for both modes */
+[data-theme="dark"] .hero-gradient-btn {
+  background: linear-gradient(270deg,  #ffb300, #ff3300, #ff005d);
+  background-size: 600% 600%;
+  animation: gradient-animation 8s ease-in-out infinite;
+} 
+[data-theme="light"] .hero-gradient-btn {
+  background: linear-gradient(270deg, #4c00ff, #007bff, #00d4ff);
+  background-size: 600% 600%;
+  animation: gradient-animation 8s ease-in-out infinite;
+}
+
+/* gradient background without animation for both modes */  
+[data-theme="dark"] .hero-gradient-bg {
+  background: linear-gradient(135deg, #ffb300, #ff3300, #ff005d);
+  background-size: 100% 100%;
+} 
+[data-theme="light"] .hero-gradient-bg {
+  background: linear-gradient(315deg, #4c00ff, #007bff, #00d4ff);
+  background-size: 100% 100%;
+}
+
+/* Gradient white and black side transperent text for both modes */
+[data-theme="dark"] .fade-text {
+  background: linear-gradient(90deg,
+    #ffffff21 0%,      /* left 15% — transparent black */
+    #ffffff 10%,     /* start fade-in */
+    #ffffff   50%,     /* center — full black */
+    #ffffff 90%,     /* end fade-out */
+    #ffffff21 100%     /* right 15% — transparent black */);
+    background-size: 100% 100%;
+    background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} 
+[data-theme="light"] .fade-text {
+  background: linear-gradient(90deg,
+    #00000021 0%,      /* left 15% — transparent black */
+    #000000 10%,     /* start fade-in */
+    #000000   50%,     /* center — full black */
+    #000000 90%,     /* end fade-out */
+    #00000021 100%     /* right 15% — transparent black */);
+    background-size: 100% 100%;
+    background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* Fallback for hover cto button shadow (black/white) */
+[data-theme="dark"] .hover\:shadow-cta:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4) !important; /* Black shadow */
+}
+[data-theme="light"] .hover\:shadow-cta:hover {
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.4) !important; /* White shadow */
+}
+
 @keyframes gradient-animation {
   0%, 100% {
     background-position: 0% 30%;
