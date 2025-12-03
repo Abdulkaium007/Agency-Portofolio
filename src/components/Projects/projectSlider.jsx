@@ -51,7 +51,7 @@ export default function ProjectSlider({ projects, onSelect }) {
                      bg-base-100/90 dark:bg-base-900/90 
                      backdrop-blur-md border border-base-300 
                      shadow-2xl flex items-center justify-center 
-                     hover:bg-primary hover:text-white hover:border-primary 
+                     hover:bg-primary hover:text-button hover:border-primary 
                      transition-all duration-300 z-20 
                      -translate-x-1/2"  // This pushes half of button outside
         >
@@ -66,7 +66,7 @@ export default function ProjectSlider({ projects, onSelect }) {
                      bg-base-100/90 dark:bg-base-900/90 
                      backdrop-blur-md border border-base-300 
                      shadow-2xl flex items-center justify-center 
-                     hover:bg-primary hover:text-white hover:border-primary 
+                     hover:bg-primary hover:text-button hover:border-primary 
                      transition-all duration-300 z-20 
                      translate-x-1/2"  // This pushes half of button outside
         >
