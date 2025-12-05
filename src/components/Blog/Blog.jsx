@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { FiCalendar, FiUser, FiClock, FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
+import BlogCTA from "./blogCTA";
 
 const posts = [
   {
@@ -57,7 +58,7 @@ export default function BlogPage() {
   const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
 
   return (
-    <section className="min-h-screen py-24 lg:py-32 px-6 overflow-hidden bg-gradient-to-b from-base-200 via-base-100 to-base-200">
+    <section className="min-h-screen py-10 lg:py-12 px-6 overflow-hidden bg-gradient-to-b from-base-200 via-base-100 to-base-200">
       <div className="max-w-7xl mx-auto">
 
         {/* Epic Heading */}
@@ -67,7 +68,7 @@ export default function BlogPage() {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <h1 className="text-5xl md:text-8xl font-black gradient-text leading-tight pb-4 tracking-tight">
+          <h1 className="text-5xl md:text-8xl font-black hero-gradient-text leading-tight pb-4 tracking-tight">
             Insights & Stories
           </h1>
           <p className="text-xl text-base-content/70 mt-6 max-w-3xl mx-auto">
@@ -91,7 +92,7 @@ export default function BlogPage() {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                   />
                 </div>
-                <div className={`relative p-12 lg:p-16 bg-gradient-to-br ${posts[0].gradient} bg-opacity-90`}>
+                <div className={`relative p-12 lg:p-16 hero-gradient-bg bg-opacity-90`}>
                   <span className="inline-block px-5 py-2 rounded-full bg-white/20 text-white font-bold text-sm mb-6">
                     FEATURED POST
                   </span>
@@ -158,23 +159,9 @@ export default function BlogPage() {
         </div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="text-center mt-24"
-        >
-          <p className="text-2xl mb-8 text-base-content/80">
-            Never miss an update
-          </p>
-          <form className="max-w-md mx-auto flex gap-4">
-            <input type="email" placeholder="Your email" className="flex-1 input input-bordered input-primary" />
-            <button className="btn btn-primary btn-lg shadow-xl hover:shadow-primary/50">
-              Subscribe
-            </button>
-          </form>
-        </motion.div>
+        
       </div>
+        <BlogCTA />
     </section>
   );
 }
