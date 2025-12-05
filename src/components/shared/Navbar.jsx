@@ -11,7 +11,7 @@ const Navbar = () => {
     {/* Logo */}
     <Link
       to="/"
-      className="text-3xl font-bold text-primary dark:text-primary"
+      className="text-3xl font-bold hero-gradient-text dark:text-primary"
       data-theme-text
     >
       BornoByte Web Agency
