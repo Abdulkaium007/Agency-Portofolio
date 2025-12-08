@@ -1,9 +1,21 @@
 // src/components/admin/DashboardMain.jsx
-export default function DashboardMain() {
-  return (
-    <div>
-      <h1 className="text-4xl font-bold mb-4">Dashboard Main</h1>
-      <p>Welcome to your admin panel!</p>
-    </div>
-  );
+import DashUsers from "./DashUsers";
+import DashProjects from "./DashProject";
+import DashBlogs from "./DashBlog";
+
+export default function DashboardMain({ activeTab }) {
+  const renderTab = () => {
+    switch (activeTab) {
+      case "team":
+        return <DashUsers />;
+      case "projects":
+        return <DashProjects />;
+      case "blogs":
+        return <DashBlogs />;
+      default:
+        return <DashUsers />;
+    }
+  };
+
+  return <div className="space-y-8">{renderTab()}</div>;
 }
