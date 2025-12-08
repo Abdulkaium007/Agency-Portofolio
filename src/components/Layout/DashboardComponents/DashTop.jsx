@@ -1,25 +1,33 @@
+// src/components/admin/DashboardTopBar.jsx
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import ThemeSwitcher from "../../shared/ThemeSwitcher";
 import { FiEdit2, FiLock, FiX } from "react-icons/fi";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
 
 export default function DashboardTopBar() {
-  // eslint-disable-next-line no-unused-vars
-  const { user, logout, login, register } = useAuth();
+  const { user, setUser, logout, adminUpdateUser } = useAuth(); // Added adminUpdateUser
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalType, setModalType] = useState(null); // "profile" or "password"
-
-  const [profileForm, setProfileForm] = useState({ name: user?.name || "", email: user?.email || "" });
-  const [passwordForm, setPasswordForm] = useState({ current: "", new: "", confirm: "" });
-
   const dropdownRef = useRef(null);
 
-  // Close dropdown on outside click
+  const [profileForm, setProfileForm] = useState({
+    fullname: user?.fullname || "",
+    email: user?.email || "",
+  });
+
+  const [passwordForm, setPasswordForm] = useState({
+    current: "",
+    new: "",
+    confirm: "",
+  });
+
+  // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
       }
     };
@@ -27,98 +35,128 @@ export default function DashboardTopBar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Handle profile form change
+  const openProfileModal = () => {
+    setProfileForm({
+      fullname: user?.fullname || "",
+      email: user?.email || "",
+    });
+    setModalType("profile");
+    setDropdownOpen(false);
+  };
+
   const handleProfileChange = (e) => {
     setProfileForm({ ...profileForm, [e.target.name]: e.target.value });
   };
 
-  // Handle password form change
   const handlePasswordChange = (e) => {
     setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
   };
 
-  // Update profile
-  const handleProfileSubmit = (e) => {
+  // UPDATE PROFILE (fullname + email)
+  const handleProfileSubmit = async (e) => {
     e.preventDefault();
-    const updatedUser = { ...user, name: profileForm.name, email: profileForm.email };
-    localStorage.setItem("authUser", JSON.stringify(updatedUser));
-    setDropdownOpen(false);
-    setModalType(null);
-    window.location.reload(); // Quick way to update dashboard data
+
+    // Prevent empty submit
+    if (!profileForm.fullname.trim() || !profileForm.email.trim()) {
+      toast.error("Name and email are required");
+      return;
+    }
+
+    const result = await adminUpdateUser(user.id, {
+      fullname: profileForm.fullname.trim(),
+      email: profileForm.email.trim().toLowerCase(),
+    });
+
+    if (result.success) {
+      setUser((prev) => ({
+        ...prev,
+        fullname: profileForm.fullname.trim(),
+        email: profileForm.email.trim().toLowerCase(),
+      }));
+      toast.success("Profile updated successfully!");
+      setModalType(null);
+    } else {
+      toast.error(result.message || "Update failed");
+    }
   };
 
-  // Update password
-  const handlePasswordSubmit = (e) => {
+  // CHANGE PASSWORD
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+
     if (passwordForm.new !== passwordForm.confirm) {
-      alert("New passwords do not match!");
+      toast.error("New passwords do not match!");
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const index = users.findIndex(u => u.email === user.email && u.password === passwordForm.current);
-    if (index === -1) {
-      alert("Current password is incorrect!");
+    if (passwordForm.new.length < 6) {
+      toast.error("Password must be at least 6 characters");
       return;
     }
 
-    users[index].password = passwordForm.new;
-    localStorage.setItem("users", JSON.stringify(users));
+    const result = await adminUpdateUser(user.id, {
+      password: passwordForm.new,
+    });
 
-    // Update authUser if currently logged in
-    const updatedAuthUser = { ...user, password: passwordForm.new };
-    localStorage.setItem("authUser", JSON.stringify(updatedAuthUser));
-
-    alert("Password updated successfully!");
-    setDropdownOpen(false);
-    setModalType(null);
+    if (result.success) {
+      toast.success("Password changed successfully!");
+      setPasswordForm({ current: "", new: "", confirm: "" });
+      setModalType(null);
+    } else {
+      toast.error(result.message || "Failed to change password");
+    }
   };
 
   return (
     <>
-      {/* Top Bar */}
       <header className="flex justify-between items-center p-4 bg-base-100 rounded-xl shadow-lg mb-8">
         <h2 className="text-2xl font-bold gradient-text">
-          Welcome, {user?.name?.split(" ")[0] || "Admin"}
+          Welcome, {user?.fullname || "Admin"}
         </h2>
 
-        <div className="flex items-center gap-4 relative">
+        <div className="relative flex items-center gap-4">
           <ThemeSwitcher />
 
-          {/* Avatar */}
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary/40"
+            className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary/40 transition-all hover:ring-primary"
           >
             <img
-              src={user?.avatar || `https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff`}
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                user?.fullname || "Admin"
+              )}&background=6366f1&color=fff&bold=true`}
               alt="Avatar"
               className="w-full h-full object-cover"
             />
           </button>
 
-          {/* Dropdown */}
           {dropdownOpen && (
             <div
               ref={dropdownRef}
-              className="absolute right-0 mt-14 w-56 bg-base-100 shadow-lg rounded-xl border border-base-300 z-50 overflow-hidden"
+              className="absolute right-0 top-16 w-56 bg-base-100 rounded-xl shadow-xl border border-base-300 z-50 overflow-hidden"
             >
               <button
-                onClick={() => setModalType("profile")}
-                className="flex items-center gap-2 px-4 py-3 hover:bg-base-300 w-full text-left font-medium"
+                onClick={openProfileModal}
+                className="w-full text-left px-4 py-3 hover:bg-base-200 flex items-center gap-3 transition"
               >
                 <FiEdit2 /> Update Profile
               </button>
               <button
-                onClick={() => setModalType("password")}
-                className="flex items-center gap-2 px-4 py-3 hover:bg-base-300 w-full text-left font-medium"
+                onClick={() => {
+                  setModalType("password");
+                  setDropdownOpen(false);
+                }}
+                className="w-full text-left px-4 py-3 hover:bg-base-200 flex items-center gap-3 transition"
               >
                 <FiLock /> Change Password
               </button>
-              <hr className="border-base-300" />
+              <hr className="my-1 border-base-300" />
               <button
-                onClick={logout}
-                className="px-4 py-3 hover:bg-error hover:text-white text-left w-full font-medium"
+                onClick={() => {
+                  logout();
+                  toast.success("Logged out successfully!");
+                }}
+                className="w-full text-left px-4 py-3 hover:bg-error hover:text-white flex items-center gap-3 transition"
               >
                 Logout
               </button>
@@ -127,87 +165,83 @@ export default function DashboardTopBar() {
         </div>
       </header>
 
-      {/* Modal */}
+      {/* MODAL OVERLAY */}
       {modalType && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-base-100 rounded-2xl shadow-2xl p-6 w-full max-w-md relative"
+            className="bg-base-100 rounded-2xl shadow-2xl p-8 w-full max-w-md relative"
           >
             <button
               onClick={() => setModalType(null)}
-              className="absolute top-4 right-4 text-xl hover:text-primary"
+              className="absolute top-4 right-4 text-2xl hover:text-primary transition"
             >
               <FiX />
             </button>
 
+            {/* PROFILE MODAL */}
             {modalType === "profile" && (
-              <>
-                <h2 className="text-2xl font-bold gradient-text mb-4">Update Profile</h2>
-                <form onSubmit={handleProfileSubmit} className="flex flex-col gap-4">
-                  <input
-                    type="text"
-                    name="name"
-                    value={profileForm.name}
-                    onChange={handleProfileChange}
-                    placeholder="Full Name"
-                    className="input input-bordered w-full bg-base-200"
-                    required
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    value={profileForm.email}
-                    onChange={handleProfileChange}
-                    placeholder="Email Address"
-                    className="input input-bordered w-full bg-base-200"
-                    required
-                  />
-                  <button className="btn btn-primary w-full hero-gradient-btn text-button">
-                    Save Changes
-                  </button>
-                </form>
-              </>
+              <form onSubmit={handleProfileSubmit} className="space-y-5">
+                <h3 className="text-2xl font-bold text-center mb-4">Update Profile</h3>
+                <input
+                  type="text"
+                  name="fullname"
+                  value={profileForm.fullname}
+                  onChange={handleProfileChange}
+                  placeholder="Full Name"
+                  className="input input-bordered w-full bg-base-200"
+                  required
+                />
+                <input
+                  type="email"
+                  name="email"
+                  value={profileForm.email}
+                  onChange={handleProfileChange}
+                  placeholder="Email Address"
+                  className="input input-bordered w-full bg-base-200"
+                  required
+                />
+                <button type="submit" className="btn btn-primary w-full hero-gradient-btn text-button text-lg">
+                  Save Changes
+                </button>
+              </form>
             )}
 
+            {/* PASSWORD MODAL */}
             {modalType === "password" && (
-              <>
-                <h2 className="text-2xl font-bold gradient-text mb-4">Change Password</h2>
-                <form onSubmit={handlePasswordSubmit} className="flex flex-col gap-4">
-                  <input
-                    type="password"
-                    name="current"
-                    value={passwordForm.current}
-                    onChange={handlePasswordChange}
-                    placeholder="Current Password"
-                    className="input input-bordered w-full bg-base-200"
-                    required
-                  />
-                  <input
-                    type="password"
-                    name="new"
-                    value={passwordForm.new}
-                    onChange={handlePasswordChange}
-                    placeholder="New Password"
-                    className="input input-bordered w-full bg-base-200"
-                    required
-                  />
-                  <input
-                    type="password"
-                    name="confirm"
-                    value={passwordForm.confirm}
-                    onChange={handlePasswordChange}
-                    placeholder="Confirm New Password"
-                    className="input input-bordered w-full bg-base-200"
-                    required
-                  />
-                  <button className="btn btn-primary w-full hero-gradient-btn text-button">
-                    Update Password
-                  </button>
-                </form>
-              </>
+              <form onSubmit={handlePasswordSubmit} className="space-y-5">
+                <h3 className="text-2xl font-bold text-center mb-4">Change Password</h3>
+                <input
+                  type="password"
+                  name="current"
+                  value={passwordForm.current}
+                  onChange={handlePasswordChange}
+                  placeholder="Current Password (not checked)"
+                  className="input input-bordered w-full bg-base-200"
+                />
+                <input
+                  type="password"
+                  name="new"
+                  value={passwordForm.new}
+                  onChange={handlePasswordChange}
+                  placeholder="New Password"
+                  className="input input-bordered w-full bg-base-200"
+                  required
+                />
+                <input
+                  type="password"
+                  name="confirm"
+                  value={passwordForm.confirm}
+                  onChange={handlePasswordChange}
+                  placeholder="Confirm New Password"
+                  className="input input-bordered w-full bg-base-200"
+                  required
+                />
+                <button type="submit" className="btn btn-primary w-full hero-gradient-btn text-button text-lg">
+                  Update Password
+                </button>
+              </form>
             )}
           </motion.div>
         </div>

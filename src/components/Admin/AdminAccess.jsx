@@ -10,8 +10,19 @@ export default function LoginRegister() {
   const [isLogin, setIsLogin] = useState(true);
   const [remember, setRemember] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({
+    fullname: "",
+    email: "",
+    password: "",
+    whatsapp: "",
+    Phone: "",
+    photo: "",
+    github: "",
+    expertise: "",
+    CV: "",
+  });
 
   const { login, register } = useAuth();
   const navigate = useNavigate();
@@ -20,24 +31,27 @@ export default function LoginRegister() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (isLogin) {
-      const success = login(form.email, form.password, remember);
-      if (success) navigate("/adminxyz/dashboard");
-      else alert("Invalid credentials!");
+      const res = await login(form.email, form.password, remember);
+      if (res.success) navigate("/adminxyz/dashboard");
+      else alert(res.message || "Invalid credentials!");
     } else {
-      const success = register(form.name, form.email, form.password);
-      if (success) {
-        alert("Account created. Login now.");
+      const res = await register(form);
+      if (res.success) {
+        alert("Account created successfully! Please login.");
         setIsLogin(true);
-      } else alert("User already exists!");
+      } else alert(res.message || "Registration failed!");
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen hero-gradient-bg flex bg-base-200 text-base-content items-center justify-center p-6">
+    <div className="min-h-screen hero-gradient-bg flex items-center justify-center p-6 bg-base-200 text-base-content">
       <motion.div
         initial={{ opacity: 0, scale: 0.85, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -45,73 +59,120 @@ export default function LoginRegister() {
         className="w-full max-w-md"
       >
         <div className="backdrop-blur-xl bg-base-300 shadow-2xl border border-base-300 rounded-3xl p-8">
-          
-          <h2 className="text-center text-4xl font-black gradient-text mb-6">
+          <h2 className="text-4xl font-black gradient-text text-center mb-6">
             {isLogin ? "Welcome Back" : "Create Your Account"}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-
-            {/* NAME (Register Only) */}
+            {/* Full Name (Register only) */}
             {!isLogin && (
-              <div className="form-control">
+              <div className="form-control relative">
                 <label className="label text-base-content">Full Name</label>
-                <div className="relative">
-                  <FiUser className="absolute left-3 top-3 text-base-content/60 text-xl" />
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    onChange={handleChange}
-                    className="input input-bordered w-full pl-12 bg-base-200/60 backdrop-blur-xl"
-                    placeholder="John Doe"
-                  />
-                </div>
+                <FiUser className="absolute left-3 top-12 text-base-content/60 text-xl" />
+                <input
+                  type="text"
+                  name="fullname"
+                  required
+                  value={form.fullname}
+                  onChange={handleChange}
+                  placeholder="John Doe"
+                  className="input input-bordered w-full pl-12 bg-base-200/60 backdrop-blur-xl"
+                />
               </div>
             )}
 
-            {/* EMAIL */}
-            <div className="form-control">
+            {/* Email */}
+            <div className="form-control relative">
               <label className="label text-base-content">Email Address</label>
-              <div className="relative">
-                <FiMail className="absolute left-3 top-3 text-base-content/60 text-xl" />
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  onChange={handleChange}
-                  className="input input-bordered w-full pl-12 bg-base-200/60 backdrop-blur-xl"
-                  placeholder="example@mail.com"
-                />
-              </div>
+              <FiMail className="absolute left-3 top-12 text-base-content/60 text-xl" />
+              <input
+                type="email"
+                name="email"
+                required
+                value={form.email}
+                onChange={handleChange}
+                placeholder="example@mail.com"
+                className="input input-bordered w-full pl-12 bg-base-200/60 backdrop-blur-xl"
+              />
             </div>
 
-            {/* PASSWORD */}
-            <div className="form-control">
+            {/* Password */}
+            <div className="form-control relative">
               <label className="label text-base-content">Password</label>
-              <div className="relative">
-                <FiLock className="absolute left-3 top-3 text-base-content/60 text-xl" />
-
-                <input
-                  type={showPass ? "text" : "password"}
-                  name="password"
-                  required
-                  onChange={handleChange}
-                  className="input input-bordered w-full pl-12 pr-12 bg-base-200/60 backdrop-blur-xl"
-                  placeholder="••••••••"
-                />
-
-                <button
-                  type="button"
-                  className="absolute right-3 top-3 text-xl text-base-content/60"
-                  onClick={() => setShowPass(!showPass)}
-                >
-                  {showPass ? <FiEyeOff /> : <FiEye />}
-                </button>
-              </div>
+              <FiLock className="absolute left-3 top-12 text-base-content/60 text-xl" />
+              <input
+                type={showPass ? "text" : "password"}
+                name="password"
+                required
+                value={form.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="input input-bordered w-full pl-12 pr-12 bg-base-200/60 backdrop-blur-xl"
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-12 text-xl text-base-content/60"
+                onClick={() => setShowPass(!showPass)}
+              >
+                {showPass ? <FiEyeOff /> : <FiEye />}
+              </button>
             </div>
 
-            {/* REMEMBER ME (Login only) */}
+            {/* Extra fields for registration */}
+            {!isLogin && (
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  name="whatsapp"
+                  placeholder="WhatsApp"
+                  value={form.whatsapp}
+                  onChange={handleChange}
+                  className="input input-bordered w-full bg-base-200/60"
+                />
+                <input
+                  type="text"
+                  name="Phone"
+                  placeholder="Phone"
+                  value={form.Phone}
+                  onChange={handleChange}
+                  className="input input-bordered w-full bg-base-200/60"
+                />
+                <input
+                  type="text"
+                  name="photo"
+                  placeholder="Photo URL"
+                  value={form.photo}
+                  onChange={handleChange}
+                  className="input input-bordered w-full bg-base-200/60"
+                />
+                <input
+                  type="text"
+                  name="github"
+                  placeholder="GitHub URL"
+                  value={form.github}
+                  onChange={handleChange}
+                  className="input input-bordered w-full bg-base-200/60"
+                />
+                <input
+                  type="text"
+                  name="expertise"
+                  placeholder="Expertise"
+                  value={form.expertise}
+                  onChange={handleChange}
+                  className="input input-bordered w-full bg-base-200/60"
+                />
+                <input
+                  type="text"
+                  name="CV"
+                  placeholder="CV URL"
+                  value={form.CV}
+                  onChange={handleChange}
+                  className="input input-bordered w-full bg-base-200/60"
+                />
+              </div>
+            )}
+
+            {/* Remember Me for Login */}
             {isLogin && (
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
@@ -124,12 +185,17 @@ export default function LoginRegister() {
               </label>
             )}
 
-            <button className="btn btn-primary w-full text-lg hero-gradient-btn text-button">
-              {isLogin ? "Login" : "Register"}
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary w-full text-lg hero-gradient-btn text-button"
+            >
+              {loading ? "Please wait..." : isLogin ? "Login" : "Register"}
             </button>
           </form>
 
-          {/* SWITCH FORM */}
+          {/* Switch Login/Register */}
           <p className="text-center mt-4 text-base-content/80">
             {isLogin ? "New here?" : "Already have an account?"}
             <button
@@ -140,19 +206,16 @@ export default function LoginRegister() {
             </button>
           </p>
 
-          {/* SOCIAL LOGIN */}
+          {/* Social login buttons (UI only) */}
           <div className="divider">or</div>
-
           <div className="flex flex-col gap-3">
             <button className="btn bg-base-200 hover:bg-base-300 w-full">
-              <FcGoogle className="text-2xl" /> Continue with Google
+              <FcGoogle className="text-2xl mr-2" /> Continue with Google
             </button>
-
             <button className="btn bg-base-200 hover:bg-base-300 w-full">
-              <FiGithub className="text-2xl" /> Continue with GitHub
+              <FiGithub className="text-2xl mr-2" /> Continue with GitHub
             </button>
           </div>
-
         </div>
       </motion.div>
     </div>
