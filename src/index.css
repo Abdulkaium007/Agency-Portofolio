@@ -269,3 +269,18 @@ section {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.ql-editor {
+  min-height: 200px;
+  font-size: 1rem;
+}
+
+.ql-container {
+  border-bottom-left-radius: 0.5rem !important;
+  border-bottom-right-radius: 0.5rem !important;
+}
+
+.ql-toolbar {
+  border-top-left-radius: 0.5rem !important;
+  border-top-right-radius: 0.5rem !important;
+}
