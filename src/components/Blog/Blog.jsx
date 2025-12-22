@@ -1,61 +1,90 @@
 // src/components/Blog/BlogPage.jsx
-// eslint-disable-next-line no-unused-vars
-import { motion } from "framer-motion";
-import { FiCalendar, FiUser, FiClock, FiArrowRight } from "react-icons/fi";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
+import { FiCalendar, FiUser, FiClock, FiArrowRight, FiX } from "react-icons/fi";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
+import axios from "axios";
 import BlogCTA from "./blogCTA";
 
-const posts = [
-  {
-    id: 1,
-    title: "Building a 100/100 Lighthouse Site in 2025",
-    excerpt: "The exact stack, tools, and performance secrets we used to hit perfect scores.",
-    author: "Alex Chen",
-    date: "Dec 4, 2025",
-    readTime: "6 min",
-    category: "Performance",
-    gradient: "from-blue-500 to-cyan-500",
-    image: "/blog/performance.jpg",
-  },
-  {
-    id: 2,
-    title: "Why AI Will Never Replace Great Designers",
-    excerpt: "AI is a tool — not a replacement. Here’s how the best designers are using it.",
-    author: "Sarah Kim",
-    date: "Nov 28, 2025",
-    readTime: "8 min",
-    category: "Design",
-    gradient: "from-purple-500 to-pink-500",
-    image: "/blog/ai-design.jpg",
-  },
-  {
-    id: 3,
-    title: "From Garage to Unicorn: Our $1M Client Story",
-    excerpt: "How we helped a startup scale with branding, dev, and growth hacking.",
-    author: "Mike Torres",
-    date: "Nov 20, 2025",
-    readTime: "10 min",
-    category: "Case Study",
-    gradient: "from-orange-500 to-red-500",
-    image: "/blog/case-study.jpg",
-  },
-  {
-    id: 4,
-    title: "The Future of Full-Stack React in 2025",
-    excerpt: "React Server Components, Suspense, and the death of client-side routing.",
-    author: "Dev Team",
-    date: "Nov 15, 2025",
-    readTime: "12 min",
-    category: "Development",
-    gradient: "from-emerald-500 to-teal-600",
-    image: "/blog/react-2025.jpg",
-  },
-  // Add more...
-];
+const BASE_URL = "/api";
 
 export default function BlogPage() {
+  const [blogs, setBlogs] = useState([]);
+  const [usersMap, setUsersMap] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [selectedBlog, setSelectedBlog] = useState(null); // For modal
   const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/blogs`);
+        setBlogs(res.data || []);
+      } catch (err) {
+        console.error("Failed to load blogs", err);
+        setBlogs([]);
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/users`);
+        const users = res.data || [];
+        const map = {};
+        users.forEach(u => {
+          map[u.id] = u.fullname || "BornoByte Team";
+        });
+        setUsersMap(map);
+      } catch (err) {
+        console.warn("Could not load user names (normal for public page)", err);
+        setUsersMap({});
+      }
+    };
+
+    const loadData = async () => {
+      await Promise.all([fetchBlogs(), fetchUsers()]);
+      setLoading(false);
+    };
+
+    loadData();
+  }, []);
+
+  const getAuthorName = (users_id) => {
+    return usersMap[users_id] || "BornoByte Team";
+  };
+
+  const openBlogModal = (blog) => {
+    setSelectedBlog(blog);
+  };
+
+  const closeBlogModal = () => {
+    setSelectedBlog(null);
+  };
+
+  const featuredBlog = blogs[0];
+  const otherBlogs = blogs.slice(1);
+
+  if (loading) {
+    return (
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-base-200 to-base-100">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+      </section>
+    );
+  }
+
+  if (blogs.length === 0) {
+    return (
+      <section className="min-h-screen py-20 px-6 bg-gradient-to-b from-base-200 via-base-100 to-base-200">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-6xl font-black hero-gradient-text mb-8">Insights & Stories</h1>
+          <p className="text-2xl text-base-content/60">No blogs published yet. Check back soon!</p>
+        </div>
+        <BlogCTA />
+      </section>
+    );
+  }
 
   return (
     <section className="min-h-screen py-10 lg:py-12 px-6 overflow-hidden bg-gradient-to-b from-base-200 via-base-100 to-base-200">
@@ -77,91 +106,131 @@ export default function BlogPage() {
         </motion.div>
 
         {/* Featured Large Post */}
-        {posts[0] && (
+        {featuredBlog && (
           <motion.article
             initial={{ opacity: 0, y: 80 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="group relative rounded-3xl overflow-hidden mb-20 shadow-2xl"
+            onClick={() => openBlogModal(featuredBlog)}
+            className="group relative rounded-3xl overflow-hidden mb-20 shadow-2xl cursor-pointer"
           >
-            <Link to={`/blog/${posts[0].id}`}>
-              <div className="grid lg:grid-cols-2 gap-0">
-                <div className="aspect-video lg:aspect-auto lg:h-full overflow-hidden">
-                  <img
-                    src={posts[0].image}
-                    alt={posts[0].title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-                  />
-                </div>
-                <div className={`relative p-12 lg:p-16 hero-gradient-bg bg-opacity-90`}>
-                  <span className="inline-block px-5 py-2 rounded-full bg-white/20 text-white font-bold text-sm mb-6">
-                    FEATURED POST
-                  </span>
-                  <h2 className="text-4xl lg:text-6xl font-black text-white mb-6 leading-tight">
-                    {posts[0].title}
-                  </h2>
-                  <p className="text-white/90 text-lg mb-8 line-clamp-3">
-                    {posts[0].excerpt}
-                  </p>
-                  <div className="flex items-center gap-6 text-white/80">
-                    <span className="flex items-center gap-2"><FiUser /> {posts[0].author}</span>
-                    <span className="flex items-center gap-2"><FiCalendar /> {posts[0].date}</span>
-                    <span className="flex items-center gap-2"><FiClock /> {posts[0].readTime}</span>
-                  </div>
-                  <FiArrowRight className="absolute bottom-8 right-8 text-4xl text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-4 transition-all" />
-                </div>
+            <div className="grid lg:grid-cols-2 gap-0">
+              <div className="aspect-video lg:aspect-auto lg:h-full overflow-hidden bg-base-300 flex items-center justify-center">
+                <span className="text-white/60 text-2xl font-medium">Blog Image Coming Soon</span>
               </div>
-            </Link>
+              <div className="relative p-12 lg:p-16 hero-gradient-bg bg-opacity-90">
+                <span className="inline-block px-5 py-2 rounded-full bg-white/20 text-white font-bold text-sm mb-6">
+                  FEATURED POST
+                </span>
+                <h2 className="text-4xl lg:text-6xl font-black text-white mb-6 leading-tight">
+                  {featuredBlog.title}
+                </h2>
+                <p className="text-white/90 text-lg mb-8 line-clamp-3">
+                  {featuredBlog.content.replace(/<[^>]*>/g, "").slice(0, 250)}...
+                </p>
+                <div className="flex items-center gap-6 text-white/80">
+                  <span className="flex items-center gap-2">
+                    <FiUser /> {getAuthorName(featuredBlog.users_id)}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <FiCalendar /> {featuredBlog.published_date ? new Date(featuredBlog.published_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Recently"}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <FiClock /> ~8 min read
+                  </span>
+                </div>
+                <FiArrowRight className="absolute bottom-8 right-8 text-4xl text-white opacity-60 group-hover:opacity-100 group-hover:translate-x-4 transition-all" />
+              </div>
+            </div>
           </motion.article>
         )}
 
-        {/* All Posts Grid — Same Premium Card as Services */}
+        {/* All Other Posts Grid */}
         <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
-          {posts.map((post, idx) => (
+          {otherBlogs.map((post, idx) => (
             <motion.article
               key={post.id}
               initial={{ opacity: 0, y: 60 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: idx * 0.12, duration: 0.8 }}
               whileHover={{ y: -16, scale: 1.04 }}
-              className="group relative p-8 rounded-3xl bg-base-100/70 dark:bg-base-900/70 backdrop-blur-xl border border-base-300/50 shadow-xl hover:border-primary/70 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 cursor-pointer overflow-hidden"
+              onClick={() => openBlogModal(post)}
+              className="group relative p-8 rounded-3xl bg-base-100/70 backdrop-blur-xl border border-base-300/50 shadow-xl hover:border-primary/70 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 cursor-pointer overflow-hidden"
             >
-              {/* Gradient Orb Background */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${post.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-700`} />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 opacity-0 group-hover:opacity-20 transition-opacity duration-700" />
 
-              {/* Category Badge */}
               <span className="relative z-10 inline-block px-4 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-4 border border-primary/20">
-                {post.category}
+                Insight
               </span>
 
-              {/* Title */}
               <h3 className="relative z-10 text-2xl font-bold mb-4 text-base-content group-hover:text-primary transition-colors duration-300">
                 {post.title}
               </h3>
 
-              {/* Excerpt */}
               <p className="relative z-10 text-base-content/70 mb-6 line-clamp-3">
-                {post.excerpt}
+                {post.content.replace(/<[^>]*>/g, "").slice(0, 150)}...
               </p>
 
-              {/* Meta */}
               <div className="relative z-10 flex items-center justify-between text-sm text-base-content/60">
                 <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1"><FiUser size={14} /> {post.author}</span>
-                  <span className="flex items-center gap-1"><FiClock size={14} /> {post.readTime}</span>
+                  <span className="flex items-center gap-1">
+                    <FiUser size={14} /> {getAuthorName(post.users_id)}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <FiClock size={14} /> ~6 min
+                  </span>
                 </div>
                 <FiArrowRight className="group-hover:translate-x-3 transition-transform duration-300" />
               </div>
 
-              {/* Shine Sweep */}
               <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-1000 pointer-events-none" />
             </motion.article>
           ))}
         </div>
 
-        {/* CTA */}
-        
-      </div>
         <BlogCTA />
+      </div>
+
+      {/* FULL BLOG MODAL */}
+      {selectedBlog && (
+        <div 
+          className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4"
+          onClick={closeBlogModal}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            onClick={(e) => e.stopPropagation()} // Prevent close when clicking inside
+            className="bg-base-100 rounded-3xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto border border-base-300"
+          >
+            <div className="sticky top-0 bg-base-100/90 backdrop-blur-xl border-b border-base-300 p-6 flex justify-between items-center">
+              <h2 className="text-4xl font-black gradient-text">{selectedBlog.title}</h2>
+              <button onClick={closeBlogModal} className="text-3xl hover:text-primary transition">
+                <FiX />
+              </button>
+            </div>
+
+            <div className="p-10 lg:p-16">
+              <div className="flex items-center gap-6 text-base-content/70 mb-8">
+                <span className="flex items-center gap-2">
+                  <FiUser /> {getAuthorName(selectedBlog.users_id)}
+                </span>
+                <span className="flex items-center gap-2">
+                  <FiCalendar /> {selectedBlog.published_date ? new Date(selectedBlog.published_date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "Recently"}
+                </span>
+                <span className="flex items-center gap-2">
+                  <FiClock /> ~8 min read
+                </span>
+              </div>
+
+              <div className="prose prose-lg max-w-none text-base-content">
+                <p className="whitespace-pre-wrap text-justify leading-relaxed">
+                  {selectedBlog.content}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }
