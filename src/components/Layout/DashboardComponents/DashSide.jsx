@@ -1,6 +1,7 @@
 // src/components/admin/DashboardSideBar.jsx
 import { useNavigate } from "react-router-dom";
 import { FiHome, FiUsers, FiFolder, FiFileText, FiLogOut } from "react-icons/fi";
+import { LiaUsersSolid } from "react-icons/lia";
 
 export default function DashboardSideBar({ logout, setActiveTab }) {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function DashboardSideBar({ logout, setActiveTab }) {
           className="flex items-center gap-3 px-4 py-3 rounded-xl text-lg font-medium text-base-content/70 hover:bg-base-300/50 hover:text-base-content"
           onClick={() => setActiveTab("team")}
         >
-          <FiUsers className="text-2xl" /> Team
+          <FiUsers className="text-2xl" /> Users
         </button>
 
         {/* Projects Tab */}
@@ -40,6 +41,14 @@ export default function DashboardSideBar({ logout, setActiveTab }) {
           onClick={() => setActiveTab("blogs")}
         >
           <FiFileText className="text-2xl" /> Blogs
+        </button>
+
+        {/* Team Members Tab */}
+        <button
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-lg font-medium text-base-content/70 hover:bg-base-300/50 hover:text-base-content"
+          onClick={() => setActiveTab("team_members")}
+        >
+          <LiaUsersSolid className="text-2xl" /> Team Members
         </button>
       </nav>
 

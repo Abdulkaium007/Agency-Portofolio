@@ -1,11 +1,10 @@
 // src/components/admin/DashBlogs.jsx
 import { useState, useEffect } from "react";
-import { useAuth } from "../../hooks/useAuth";  // ← Fixed path
+import { useAuth } from "../../hooks/useAuth";
 import axios from "axios";
-import { FiPlus, FiEdit2, FiTrash2, FiX, FiCalendar } from "react-icons/fi";
+import { FiPlus, FiEdit2, FiTrash2, FiX, FiCalendar, FiCheck, FiAlertTriangle } from "react-icons/fi";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-import { toast } from "react-hot-toast";
 import { format } from "date-fns";
 
 const BASE_URL = "http://100.84.176.7:5000";
@@ -16,6 +15,7 @@ export default function DashBlogs() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingBlog, setEditingBlog] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null); // { id, title }
 
   const [form, setForm] = useState({
     title: "",
@@ -23,8 +23,16 @@ export default function DashBlogs() {
     published_date: format(new Date(), "yyyy-MM-dd"),
   });
 
+  const [toast, setToast] = useState({ show: false, type: "", message: "" });
+
+  const showToast = (type, message) => {
+    setToast({ show: true, type, message });
+    setTimeout(() => setToast({ show: false, type: "", message: "" }), 3000);
+  };
+
   useEffect(() => {
     fetchBlogs();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchBlogs = async () => {
@@ -32,7 +40,7 @@ export default function DashBlogs() {
       const res = await axios.get(`${BASE_URL}/blogs`);
       setBlogs(res.data || []);
     } catch (err) {
-      toast.error("Failed to load blogs");
+      showToast("error", "Failed to load blogs");
       console.error(err);
     } finally {
       setLoading(false);
@@ -42,7 +50,7 @@ export default function DashBlogs() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim() || !form.content.trim()) {
-      toast.error("Title and content are required");
+      showToast("error", "Title and content are required");
       return;
     }
 
@@ -58,32 +66,37 @@ export default function DashBlogs() {
         await axios.put(`${BASE_URL}/blogs/${editingBlog.id}`, payload, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        toast.success("Blog updated successfully!");
+        showToast("success", "Blog updated successfully!");
       } else {
         await axios.post(`${BASE_URL}/blogs`, payload, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        toast.success("Blog created successfully!");
+        showToast("success", "Blog created successfully!");
       }
       closeModal();
       fetchBlogs();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Operation failed");
+      showToast("error", err.response?.data?.message || "Operation failed");
       console.error(err);
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this blog?")) return;
+  const confirmDelete = (id, title) => {
+    setDeleteConfirm({ id, title });
+  };
+
+  const executeDelete = async () => {
+    if (!deleteConfirm) return;
 
     try {
-      await axios.delete(`${BASE_URL}/blogs/${id}`, {
+      await axios.delete(`${BASE_URL}/blogs/${deleteConfirm.id}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
-      toast.success("Blog deleted");
+      showToast("success", "Blog deleted successfully");
+      setDeleteConfirm(null);
       fetchBlogs();
     } catch (err) {
-      toast.error("Delete failed");
+      showToast("error", "Delete failed");
       console.error(err);
     }
   };
@@ -116,7 +129,47 @@ export default function DashBlogs() {
   };
 
   return (
-    <div className="p-6 min-h-screen">
+    <div className="p-6 min-h-screen relative">
+      {/* Custom Toast */}
+      {toast.show && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-fadeIn">
+          <div className={`alert ${toast.type === "success" ? "alert-success" : "alert-error"} shadow-lg flex items-center gap-3 max-w-md`}>
+            {toast.type === "success" ? <FiCheck className="text-2xl" /> : <FiAlertTriangle className="text-2xl" />}
+            <span className="font-medium">{toast.message}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-base-100 rounded-2xl shadow-2xl p-8 max-w-md border border-base-300"
+          >
+            <h3 className="text-2xl font-bold text-error mb-4">Confirm Delete</h3>
+            <p className="text-base-content/80 mb-8">
+              Are you sure you want to delete "<span className="font-semibold">{deleteConfirm.title}</span>"? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="btn btn-ghost"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={executeDelete}
+                className="btn btn-error hero-gradient-btn text-white"
+              >
+                Delete Permanently
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       <div className="flex justify-between items-center mb-10">
         <h1 className="text-5xl font-black gradient-text">Blog Management</h1>
         <button onClick={openAdd} className="btn btn-primary hero-gradient-btn flex items-center gap-3 text-lg">
@@ -154,7 +207,7 @@ export default function DashBlogs() {
                   <button onClick={() => openEdit(blog)} className="btn btn-ghost btn-sm">
                     <FiEdit2 /> Edit
                   </button>
-                  <button onClick={() => handleDelete(blog.id)} className="btn btn-error btn-sm">
+                  <button onClick={() => confirmDelete(blog.id, blog.title)} className="btn btn-error btn-sm">
                     <FiTrash2 /> Delete
                   </button>
                 </div>
