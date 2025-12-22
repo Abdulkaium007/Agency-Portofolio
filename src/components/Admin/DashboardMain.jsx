@@ -2,6 +2,7 @@
 import DashUsers from "./DashUsers";
 import DashProjects from "./DashProject";
 import DashBlogs from "./DashBlog";
+import DashTeamMembers from "./DashTeam";
 
 export default function DashboardMain({ activeTab }) {
   const renderTab = () => {
@@ -12,6 +13,8 @@ export default function DashboardMain({ activeTab }) {
         return <DashProjects />;
       case "blogs":
         return <DashBlogs />;
+      case "team_members":
+        return <DashTeamMembers />;
       default:
         return <DashUsers />;
     }
