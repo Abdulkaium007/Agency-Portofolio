@@ -9,7 +9,7 @@ export default defineConfig({
     host: true, // Allows access from network IPs
     proxy: {
       "/api": {
-        target: "http://100.84.176.7:5000",
+        target: "http://localhost:5000",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
